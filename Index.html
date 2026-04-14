@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reginald.Ink — Tattoo Price Estimator</title>
+  <meta name="description" content="Custom tattoo pricing estimator — Reginald.Ink, private studio in Kutztown, PA." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+body {
+  background: #080808;
+  color: #fff;
+  font-family: 'Georgia', serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* TOP BAR */
+.topbar {
+  width: 100%;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo { font-size: 17px; letter-spacing: 0.08em; }
+.logo span { color: #e8002a; }
+.logo-sub { font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 0.15em; margin-top: 3px; }
+.ig-link {
+  color: rgba(255,255,255,0.4);
+  font-size: 11px;
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: opacity 0.2s;
+}
+.ig-link:hover { opacity: 0.7; }
+
+/* MAIN */
+.main {
+  width: 100%;
+  max-width: 500px;
+  padding: 36px 20px 60px;
+}
+
+/* HEADING */
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  color: #e8002a;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(26px, 7vw, 40px);
+  font-weight: normal;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+}
+.subhead {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.6;
+  margin-bottom: 36px;
+}
+
+/* SECTION LABEL */
+.label {
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  color: rgba(255,255,255,0.35);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.section { margin-bottom: 32px; }
+
+/* STYLE GRID */
+.style-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.style-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+  transition: all 0.18s;
+}
+.style-btn.active {
+  background: rgba(232,0,42,0.12);
+  border-color: #e8002a;
+  color: #fff;
+}
+.style-btn .btn-title { font-size: 13px; font-weight: bold; margin-bottom: 3px; }
+.style-btn .btn-desc { font-size: 10px; color: rgba(255,255,255,0.28); line-height: 1.3; }
+.style-btn.active .btn-desc { color: rgba(255,255,255,0.55); }
+
+/* SIZE GRID */
+.size-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  margin-bottom: 14px;
+}
+.size-btn {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.5);
+  border-radius: 6px;
+  padding: 10px 4px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+  transition: all 0.18s;
+}
+.size-btn.active {
+  background: rgba(232,0,42,0.12);
+  border-color: #e8002a;
+  color: #fff;
+}
+.size-btn .btn-title { font-size: 12px; font-weight: bold; margin-bottom: 4px; }
+.size-btn .btn-desc { font-size: 9px; color: rgba(255,255,255,0.28); line-height: 1.4; }
+.size-btn.active .btn-desc { color: rgba(255,255,255,0.55); }
+.size-hint { text-align: center; margin-top: 10px; font-size: 11px; color: #e8002a; }
+
+/* SLIDER */
+.track {
+  width: 100%;
+  appearance: none;
+  height: 2px;
+  outline: none;
+  cursor: pointer;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.1);
+}
+.track::-webkit-slider-thumb {
+  appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #e8002a;
+  cursor: pointer;
+  border: 2px solid #080808;
+  box-shadow: 0 0 0 2px rgba(232,0,42,0.3);
+}
+.track::-moz-range-thumb {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #e8002a;
+  cursor: pointer;
+  border: 2px solid #080808;
+}
+
+/* PLACEMENT PILLS */
+.placement-section { margin-bottom: 36px; }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.55);
+  border-radius: 999px;
+  padding: 7px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.18s;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+.pill.active {
+  background: #e8002a;
+  border-color: #e8002a;
+  color: #fff;
+}
+.placement-note {
+  margin-top: 10px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.38);
+  font-style: italic;
+}
+
+/* RESULT CARD */
+.result-card {
+  background: linear-gradient(145deg, #110005, #0d0d0d);
+  border: 1px solid rgba(232,0,42,0.4);
+  border-radius: 10px;
+  padding: 28px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.result-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% -10%, rgba(232,0,42,0.1), transparent 65%);
+  pointer-events: none;
+}
+.result-label {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 14px;
+  text-transform: uppercase;
+}
+.result-price {
+  font-size: clamp(38px, 11vw, 58px);
+  color: #fff;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.result-price .dash {
+  color: rgba(255,255,255,0.25);
+  font-size: 0.55em;
+  margin: 0 8px;
+}
+.result-meta {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 22px;
+}
+.result-min {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 14px;
+}
+.book-btn {
+  display: inline-block;
+  background: #e8002a;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 13px 30px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  font-family: inherit;
+  transition: opacity 0.2s;
+}
+.book-btn:hover { opacity: 0.82; }
+
+.fine-print {
+  text-align: center;
+  font-size: 10px;
+  color: rgba(255,255,255,0.18);
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <!-- TOP BAR -->
+
+  <div class="topbar">
+    <div>
+      <div class="logo">REGINALD<span>.INK</span></div>
+      <div class="logo-sub">KUTZTOWN, PA · PRIVATE STUDIO</div>
+    </div>
+    <a class="ig-link" href="https://instagram.com/reginald.ink" target="_blank">@reginald.ink</a>
+  </div>
+
+  <!-- MAIN -->
+
+  <div class="main">
+
+```
+<div class="eyebrow">Price Estimator</div>
+<h1>What will your<br>tattoo cost?</h1>
+<p class="subhead">Based on $200/hr. This is a ballpark — every piece gets a custom quote.</p>
+
+<!-- STYLE -->
+<div class="section">
+  <div class="label">Style</div>
+  <div class="style-grid" id="style-grid"></div>
+</div>
+
+<!-- SIZE -->
+<div class="section">
+  <div class="label">Size</div>
+  <div class="size-grid" id="size-grid"></div>
+  <input class="track" type="range" id="size-slider" min="0" max="4" value="1" />
+  <div class="size-hint" id="size-hint"></div>
+</div>
+
+<!-- PLACEMENT -->
+<div class="placement-section">
+  <div class="label">Body Placement</div>
+  <div class="pills" id="placement-pills"></div>
+  <div class="placement-note" id="placement-note"></div>
+</div>
+
+<!-- RESULT -->
+<div class="result-card">
+  <div class="result-label">Estimated Range</div>
+  <div class="result-price">
+    <span id="price-lo"></span>
+    <span class="dash">–</span>
+    <span id="price-hi"></span>
+  </div>
+  <div class="result-meta" id="result-meta"></div>
+  <div class="result-min">$200 minimum · Final quote at consultation</div>
+  <a class="book-btn" href="https://instagram.com/reginald.ink" target="_blank">
+    DM TO BOOK → @reginald.ink
+  </a>
+</div>
+
+<p class="fine-print">
+  Final pricing confirmed before every session.<br>
+  Complexity, reference detail &amp; revision rounds may adjust cost.
+</p>
+```
+
+  </div>
+
+  <script>
+    const STYLES = [
+      { label: "Fine Line",    desc: "Florals, botanicals, delicate linework", multiplier: 0.85 },
+      { label: "Black & Grey", desc: "Shading, illustrative, geometric",       multiplier: 1.0  },
+      { label: "Realism",      desc: "Portraits, animals, detailed scenes",     multiplier: 1.5  },
+      { label: "Color",        desc: "Watercolor, traditional, color pops",     multiplier: 1.3  },
+    ];
+
+    const SIZES = [
+      { label: "Tiny",   sub: "matchbook",  inches: '1–2"', baseHours: 1.0  },
+      { label: "Small",  sub: "palm-sized", inches: '2–3"', baseHours: 1.75 },
+      { label: "Medium", sub: "hand-sized", inches: '4–5"', baseHours: 3.25 },
+      { label: "Large",  sub: "half sleeve",inches: '6–8"', baseHours: 6.25 },
+      { label: "XL",     sub: "full sleeve+",inches:'9"+"', baseHours: 12.25},
+    ];
+
+    const PLACEMENTS = [
+      { label: "Outer Arm",          factor: 1.0  },
+      { label: "Thigh / Back",       factor: 1.0  },
+      { label: "Inner Arm / Chest",  factor: 1.1  },
+      { label: "Ribs / Spine",       factor: 1.25 },
+      { label: "Hands / Feet / Neck",factor: 1.3  },
+    ];
+
+    const BASE_RATE = 200;
+    const MINIMUM   = 200;
+
+    let styleIdx     = 1;
+    let sizeIdx      = 1;
+    let placementIdx = 0;
+
+    // --- BUILD STYLE GRID ---
+    const styleGrid = document.getElementById('style-grid');
+    STYLES.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'style-btn' + (i === styleIdx ? ' active' : '');
+      btn.innerHTML = `<div class="btn-title">${s.label}</div><div class="btn-desc">${s.desc}</div>`;
+      btn.addEventListener('click', () => { styleIdx = i; refreshStyles(); update(); });
+      styleGrid.appendChild(btn);
+    });
+
+    function refreshStyles() {
+      styleGrid.querySelectorAll('.style-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === styleIdx);
+      });
+    }
+
+    // --- BUILD SIZE GRID ---
+    const sizeGrid   = document.getElementById('size-grid');
+    const sizeSlider = document.getElementById('size-slider');
+
+    SIZES.forEach((s, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'size-btn' + (i === sizeIdx ? ' active' : '');
+      btn.innerHTML = `<div class="btn-title">${s.label}</div><div class="btn-desc">${s.sub}<br>${s.inches}</div>`;
+      btn.addEventListener('click', () => { sizeIdx = i; sizeSlider.value = i; refreshSizes(); update(); });
+      sizeGrid.appendChild(btn);
+    });
+
+    sizeSlider.addEventListener('input', () => {
+      sizeIdx = parseInt(sizeSlider.value);
+      refreshSizes();
+      update();
+    });
+
+    // Update slider track fill
+    function updateSliderFill() {
+      const pct = (sizeIdx / 4) * 100;
+      sizeSlider.style.background = `linear-gradient(to right, #e8002a ${pct}%, rgba(255,255,255,0.1) ${pct}%)`;
+    }
+
+    function refreshSizes() {
+      sizeGrid.querySelectorAll('.size-btn').forEach((btn, i) => {
+        btn.classList.toggle('active', i === sizeIdx);
+      });
+      sizeSlider.value = sizeIdx;
+      updateSliderFill();
+    }
+
+    // --- BUILD PLACEMENT PILLS ---
+    const pillsEl = document.getElementById('placement-pills');
+    PLACEMENTS.forEach((p, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'pill' + (i === placementIdx ? ' active' : '');
+      btn.textContent = p.label;
+      btn.addEventListener('click', () => { placementIdx = i; refreshPlacements(); update(); });
+      pillsEl.appendChild(btn);
+    });
+
+    function refreshPlacements() {
+      pillsEl.querySelectorAll('.pill').forEach((btn, i) => {
+        btn.classList.toggle('active', i === placementIdx);
+      });
+      const note = document.getElementById('placement-note');
+      note.textContent = PLACEMENTS[placementIdx].factor > 1
+        ? '↑ This placement adds time — tighter skin, more care'
+        : '';
+    }
+
+    // --- CALCULATE & RENDER ---
+    function update() {
+      const style     = STYLES[styleIdx];
+      const size      = SIZES[sizeIdx];
+      const placement = PLACEMENTS[placementIdx];
+
+      const hours = parseFloat((size.baseHours * style.multiplier * placement.factor).toFixed(1));
+      const raw   = hours * BASE_RATE;
+      const mid   = Math.max(MINIMUM, Math.round(raw / 25) * 25);
+      const lo    = Math.max(MINIMUM, mid - Math.round(mid * 0.15 / 25) * 25);
+      const hi    = mid + Math.round(mid * 0.2 / 25) * 25;
+
+      document.getElementById('price-lo').textContent  = '$' + lo.toLocaleString();
+      document.getElementById('price-hi').textContent  = '$' + hi.toLocaleString();
+      document.getElementById('result-meta').textContent =
+        `~${hours} hrs · ${style.label} · ${size.label} · ${placement.label}`;
+
+      document.getElementById('size-hint').textContent = `~${size.baseHours}h base`;
+    }
+
+    // Init
+    updateSliderFill();
+    update();
+  </script>
+
+</body>
+</html>
